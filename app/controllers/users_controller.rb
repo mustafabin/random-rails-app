@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show update destroy ]
+  rescue_from ActiveRecord::RecordNotFound, with: :invaild_req
 
   def test
     render json: {message: "helloooadmfgad"}
@@ -47,7 +48,9 @@ class UsersController < ApplicationController
     def set_user
       @user = User.find(params[:id])
     end
-
+    def invaild_req(invaild)
+      render json: {error: invaild}, status: 400
+    end
 
     # Only allow a list of trusted parameters through.
     def user_params
